@@ -72,6 +72,7 @@ class ApplicabilityRulePackTests(unittest.TestCase):
                     "applicable_authorities_sha256",
                     "non_applicable_authorities_sha256",
                     "package_fact_graph_sha256",
+                    "selected_action_sha256",
                     "retrieval_trace_sha256",
                     "graph_trace_sha256",
                     "search_coverage_certificates_sha256",

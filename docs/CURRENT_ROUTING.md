@@ -76,14 +76,21 @@ Use this short route before opening append-only docs.
 - Latest fresh-EA graph-gate probe:
   Mud Creek Vegetation Management Project `55744` is recorded as a fresh
   Bitterroot probe in
-  `docs/MUD_CREEK_GRAPH_GATE_FRESH_EA_PROBE_RESULTS.md`. The scoped package
-  intake and `ea-review` passed, but applicability failed closed on one
-  unresolved authority-family template
-  (`minerals_energy_authorities_authority_template`). The gate graph validated
-  structurally with blocked/pending states (`998` nodes, `997` edges, `2`
-  blocked gates, `1` pending gate), and phase-eval failed `27/30` before rule
-  pack or compliance-review generation. Treat this as fresh stop-condition
-  evidence, not as a fourth completed full-review quality case.
+  `docs/MUD_CREEK_GRAPH_GATE_FRESH_EA_PROBE_RESULTS.md`. The initial scoped
+  package intake and `ea-review` passed, and the graph gate correctly preserved
+  a blocked applicability state on
+  `minerals_energy_authorities_authority_template`. The follow-up selected
+  action slice now makes `selected_action/selected_action.json` a first-class
+  package-action boundary for applicability. Replayed Mud Creek applicability
+  now has `946` decisions, `38` applicable, `908` not applicable, `0`
+  needs-adjudication, `applicability_validation.passed=true`,
+  `generated_rule_pack_ready=true`, and a `38`-rule generated pack. The
+  minerals-energy family is `not_applicable` with
+  `basis_type=absent_trigger_evidence`. `applicability-gate-graph` still has
+  `998` nodes and `997` edges with `0` failed checks and no blocked gates.
+  `phase-eval` now passes `29/30`; the only remaining blocker is the missing
+  compliance review/matrix for this ad hoc review. Treat this as selected-action
+  applicability proof, not as a fourth completed full-review quality case.
 - Prior resolved forest-plan review/inventory slice: all-R1 legacy direction and management-area inventory closeout, source-set inventory authority/applicability gate hardening, Forest Plan context-derived package facts, weak-trigger adjudication narrowing for Forest Plan components, broad authority-family positive-precedence arbitration, and review-scoped component-decision application for compliance matrices. `forest-plan-resolve` now requires the active source-set component inventory instead of silently falling back to the seed fixture; package fact graph builds promote resolver package-evidenced management areas and overlays from `forest_plan_context.json` into first-class package facts; stale applicability authority universes fail against the current Forest Plan context inventory path/count; weak-only positive Forest Plan component trigger evidence is diagnostic trigger-miss evidence instead of an adjudication blocker; review-scoped Forest Plan component applicability decisions narrow the component compliance gate when present. North Seeley now replays with `1070` authority candidates, `67` applicable authorities, `1003` not-applicable authorities, `0` unresolved applicability decisions, `16` applicable Forest Plan standards, a valid compliance matrix JSON/Markdown/PDF, and `phase-eval` `30/30` passing.
 - Prior all-forest Forest Plan authority-universe coverage hardening: review-scoped
   `applicability-authority-universe` now derives the selected forest from

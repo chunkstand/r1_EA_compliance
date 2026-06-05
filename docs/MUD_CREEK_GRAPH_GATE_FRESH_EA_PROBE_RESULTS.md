@@ -89,6 +89,11 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate \
   --review-id region1-example-bitterroot-mud-creek-55744 \
   --source-set-id source-set-f70ea11e04ae3d53
 
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack \
+  --output-dir source_library \
+  --review-id region1-example-bitterroot-mud-creek-55744 \
+  --source-set-id source-set-f70ea11e04ae3d53
+
 PYTHONPATH=src python -m usfs_r1_ea_sources applicability-gate-graph \
   --output-dir source_library \
   --review-id region1-example-bitterroot-mud-creek-55744 \
@@ -135,18 +140,35 @@ Applicability:
 - base rules: `47`
 - authority-family rule-template candidates: `19`
 - Forest Plan component candidates: `880`
+- selected-action scope: `selected_action_found`
+- selected-action package chunks: `116`
+- selected-action validation: `passed=true`
 - package fact nodes: `12,881`
 - package fact edges: `47,507`
 - retrieval trace rows: `8,514`
-- graph trace rows: `23,649`
-- decisions: `59` applicable, `886` not applicable, `1` needs adjudication
-- validation status: `passed=false`, `reviewer_ready=false`
+- graph trace rows: `23,644`
+- decisions: `38` applicable, `908` not applicable, `0` unresolved, `0`
+  needs adjudication
+- validation status: `passed=true`, `reviewer_ready=true`
 
-The unresolved authority is:
+The previously unresolved authority now resolves to absent trigger evidence:
 
 ```text
 authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:minerals_energy_authorities:minerals_energy_authorities_authority_template
 ```
+
+- status: `not_applicable`
+- basis type: `absent_trigger_evidence`
+- arbitration status: `positive_trigger_absent`
+- decisive trigger groups: `[]`
+- package evidence spans: `0`
+
+Generated rule pack:
+
+- generated-rule-pack validation: `passed=true`
+- generated rule count: `38`
+- generated-rule-pack ready: `true`
+- selected-action hash recorded: `true`
 
 Graph gate:
 
@@ -154,48 +176,56 @@ Graph gate:
 - nodes: `998`
 - edges: `997`
 - failed graph checks: `0`
-- activation states: `102` open, `892` closed, `2` blocked, `1` pending,
+- activation states: `75` open, `921` closed, `1` pending,
   `1` currentness-only
-- gate statuses: `102` applicable, `892` not applicable,
-  `2` needs adjudication, `1` candidate, `1` superseded
+- gate statuses: `75` applicable, `921` not applicable, `1` candidate,
+  `1` superseded
+- blocked gates: `0`
 
 Phase eval:
 
 - `passed=false`
 - `reviewer_ready=false`
-- phases: `27/30` passing
+- phases: `29/30` passing
 - blockers:
-  - `applicability_validation`: validation failed and not reviewer-ready
-  - `generated_rule_pack`: validation failed and not reviewer-ready
   - `compliance_review`: validation failed and not reviewer-ready
-
-Rule-pack generation correctly stopped:
-
-```text
-Cannot generate a rule pack because applicability_validation.json has not passed.
-```
 
 ## Finding
 
-This fresh-EA probe did not produce a fourth completed full-review quality case.
-It produced a stronger fail-closed result:
+This fresh-EA probe still does not produce a fourth completed full-review
+quality case. It now has two useful system findings:
 
 - The package review itself is extractable and reviewer-ready.
-- The Forest Plan and applicability layers expose real unresolved review work.
-- The graph gate structurally validates while carrying blocked and pending gate
-  states.
-- The system does not convert an unresolved authority-family conflict into a
-  generated rule pack, compliance review, or green phase-eval.
+- The initial graph-gate run correctly preserved a blocked applicability state
+  instead of producing a false green.
+- The selected-action slice showed that the block was not a substantive
+  minerals/energy action. It was caused by broad package-context consumption:
+  the old minerals-energy template accepted bare `minerals` evidence, and the
+  selected alternative contains restoration language about exposing mineral
+  soil for seed germination.
+- `selected_action/selected_action.json` is now the package-action boundary for
+  applicability. Package trigger search, retrieval, graph expansion, Forest
+  Plan present-values, decisions, provenance, validation, and generated rule
+  packs all carry the selected-action hash.
+- After replay, the minerals-energy family is not applicable because no
+  selected-action trigger group is present for mining, mineral exploration,
+  mineral development, plan of operations, mineral materials, mineral
+  production, energy development, surface use plan, mine reclamation,
+  reclamation plan, or oil and gas.
+- Applicability validation and generated-rule-pack validation now pass. The
+  remaining phase-eval blocker is only the missing compliance review/matrix,
+  which has not been generated for this ad hoc packet.
 
 What this adds beyond the three already-reviewed examples: the graph-gate system
 is not only a traceability/readback layer for green reviews. On a fresh EA it
-preserves a blocked applicability state and prevents a false green downstream
-review.
+first preserved a blocked applicability state, then provided the evidence needed
+to tighten the applicability input boundary and replay the gate to green for
+applicability without silently masking downstream compliance work.
 
 ## Boundary
 
 This result does not prove substantive legal correctness for Mud Creek and does
-not justify manual or hidden adjudication. Completing this EA as a full fourth
-case requires a separate human-review/adjudication packet for the
-`minerals_energy_authorities` conflict and the Bitterroot Forest Plan component
-resolution queue.
+not complete Mud Creek as a full fourth review case. The selected-action
+applicability and generated-rule-pack gates are reviewer-ready; compliance
+review and the compliance matrix remain ungenerated, and the Bitterroot Forest
+Plan component resolution queue remains outside this slice.

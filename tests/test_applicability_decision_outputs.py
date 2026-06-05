@@ -184,9 +184,11 @@ class ApplicabilityDecisionOutputsTests(unittest.TestCase):
             coverage_path = _write_text(root / "coverage.json", "{}\n")
             package_manifest_path = _write_text(root / "package_manifest.jsonl", "{}\n")
             package_chunks_path = _write_text(root / "package_chunks.jsonl", "{}\n")
+            selected_action_path = _write_text(root / "selected_action.json", "{}\n")
             catalog_path = _write_text(root / "catalog.jsonl", "{}\n")
             package_context_sha256 = sha256_file(package_context_path)
             package_manifest_sha256 = sha256_file(package_manifest_path)
+            selected_action_sha256 = sha256_file(selected_action_path)
 
             provenance = decision_provenance(
                 applicability_run_id="applicability-determine:review-unit:source-set-unit",
@@ -205,6 +207,7 @@ class ApplicabilityDecisionOutputsTests(unittest.TestCase):
                 search_coverage_certificates_path=coverage_path,
                 package_manifest_path=package_manifest_path,
                 package_chunks_path=package_chunks_path,
+                selected_action_path=selected_action_path,
                 source_set_manifest_path=None,
                 source_catalog_path=catalog_path,
                 authority_universe_sha256="authority-universe-sha",
@@ -212,6 +215,7 @@ class ApplicabilityDecisionOutputsTests(unittest.TestCase):
                 package_manifest_sha256=package_manifest_sha256,
                 package_chunks_sha256=sha256_file(package_chunks_path),
                 package_fact_graph_sha256=sha256_file(package_fact_graph_path),
+                selected_action_sha256=selected_action_sha256,
                 retrieval_trace_sha256=sha256_file(retrieval_trace_path),
                 graph_trace_sha256=sha256_file(graph_trace_path),
                 search_coverage_certificates_sha256=sha256_file(coverage_path),
@@ -234,6 +238,7 @@ class ApplicabilityDecisionOutputsTests(unittest.TestCase):
         )
         entities = {entity["entity_id"]: entity for entity in provenance["entities"]}
         self.assertTrue(entities["package_manifest"]["exists"])
+        self.assertTrue(entities["selected_action"]["exists"])
         self.assertTrue(entities["catalog"]["exists"])
         self.assertFalse(entities["source_set_manifest"]["exists"])
         self.assertIsNone(entities["source_set_manifest"]["path"])
@@ -241,10 +246,14 @@ class ApplicabilityDecisionOutputsTests(unittest.TestCase):
             entities["package_applicability_context"]["sha256"],
             package_context_sha256,
         )
-        self.assertEqual(len(provenance["relations"]), 36)
+        self.assertEqual(len(provenance["relations"]), 40)
         self.assertEqual(
             provenance["freshness"]["package_manifest_sha256"],
             package_manifest_sha256,
+        )
+        self.assertEqual(
+            provenance["freshness"]["selected_action_sha256"],
+            selected_action_sha256,
         )
 
 

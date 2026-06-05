@@ -1725,17 +1725,19 @@
       "severity": "medium",
       "question": "Does the EA package contain project facts that trigger Minerals and energy-development authorities?",
       "requirement": "When package facts trigger Minerals and energy-development authorities, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
-      "package_query": "minerals OR mining OR plan of operations OR mineral materials OR energy development OR surface use OR reclamation OR oil and gas",
+      "package_query": "mining OR mineral exploration OR mineral development OR plan of operations OR mineral materials OR mineral production OR energy development OR surface use plan OR mine reclamation OR reclamation plan OR oil and gas",
       "package_terms": [
-        "minerals",
         "mining",
+        "mineral exploration",
+        "mineral development",
         "plan of operations",
         "mineral materials",
+        "mineral production",
         "energy development",
-        "surface use",
-        "reclamation",
-        "oil and gas",
-        "mineral production"
+        "surface use plan",
+        "mine reclamation",
+        "reclamation plan",
+        "oil and gas"
       ],
       "package_fact_types": [
         "action",
@@ -1756,22 +1758,27 @@
         "permits"
       ],
       "applies_if_package_terms": [
-        "minerals",
         "mining",
+        "mineral exploration",
+        "mineral development",
         "plan of operations",
         "mineral materials",
+        "mineral production",
         "energy development",
-        "surface use",
-        "reclamation",
-        "oil and gas",
-        "mineral production"
+        "surface use plan",
+        "mine reclamation",
+        "reclamation plan",
+        "oil and gas"
       ],
       "applies_if_package_term_groups": [
         [
-          "minerals"
+          "mining"
         ],
         [
-          "mining"
+          "mineral exploration"
+        ],
+        [
+          "mineral development"
         ],
         [
           "plan of operations"
@@ -1780,19 +1787,22 @@
           "mineral materials"
         ],
         [
+          "mineral production"
+        ],
+        [
           "energy development"
         ],
         [
-          "surface use"
+          "surface use plan"
         ],
         [
-          "reclamation"
+          "mine reclamation"
+        ],
+        [
+          "reclamation plan"
         ],
         [
           "oil and gas"
-        ],
-        [
-          "mineral production"
         ]
       ],
       "does_not_apply_if_package_terms": [

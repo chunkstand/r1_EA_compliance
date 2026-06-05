@@ -134,6 +134,7 @@ def _generated_rule_pack(
             "applicability_provenance_sha256"
         ),
         "package_fact_graph_sha256": validation_hashes.get("package_fact_graph_sha256"),
+        "selected_action_sha256": validation_hashes.get("selected_action_sha256"),
         "retrieval_trace_sha256": validation_hashes.get("retrieval_trace_sha256"),
         "graph_trace_sha256": validation_hashes.get("graph_trace_sha256"),
         "search_coverage_certificates_sha256": validation_hashes.get(
@@ -351,6 +352,7 @@ def _generated_artifact_hashes(
             paths["non_applicable_authorities"]
         ),
         "package_fact_graph_sha256": validation_hashes.get("package_fact_graph_sha256"),
+        "selected_action_sha256": validation_hashes.get("selected_action_sha256"),
         "retrieval_trace_sha256": validation_hashes.get("retrieval_trace_sha256"),
         "graph_trace_sha256": validation_hashes.get("graph_trace_sha256"),
         "search_coverage_certificates_sha256": validation_hashes.get(

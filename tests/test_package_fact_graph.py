@@ -28,13 +28,39 @@ class PackageFactGraphTests(unittest.TestCase):
             self.assertTrue(result.package_fact_graph_path.exists())
             self.assertTrue(result.package_applicability_context_path.exists())
             self.assertTrue(result.validation_summary_path.exists())
+            selected_action_path = (
+                output_dir / "reviews" / review_id / "selected_action" / "selected_action.json"
+            )
+            selected_action_validation_path = (
+                output_dir
+                / "reviews"
+                / review_id
+                / "selected_action"
+                / "selected_action_validation.json"
+            )
+            self.assertTrue(selected_action_path.exists())
+            self.assertTrue(selected_action_validation_path.exists())
             self.assertTrue(result.summary["validation_passed"])
 
             graph = json.loads(result.package_fact_graph_path.read_text(encoding="utf-8"))
             context = json.loads(
                 result.package_applicability_context_path.read_text(encoding="utf-8")
             )
+            selected_action = json.loads(selected_action_path.read_text(encoding="utf-8"))
             self.assertEqual(graph["schema_version"], "package-fact-graph-v0")
+            self.assertEqual(selected_action["schema_version"], "selected-action-v0")
+            self.assertEqual(
+                graph["selected_action_sha256"],
+                selected_action["selected_action_sha256"],
+            )
+            self.assertEqual(
+                context["selected_action_sha256"],
+                selected_action["selected_action_sha256"],
+            )
+            self.assertEqual(
+                selected_action["selected_action_scope"]["scope_status"],
+                "proposed_action_found",
+            )
             self.assertEqual(
                 context["schema_version"],
                 "package-applicability-context-v0",
@@ -495,9 +521,13 @@ class PackageFactGraphTests(unittest.TestCase):
             graph_path = applicability_dir / "package_fact_graph.json"
             context_path = applicability_dir / "package_applicability_context.json"
             validation_path = applicability_dir / "package_fact_graph_validation.json"
+            selected_action_path = (
+                output_dir / "reviews" / review_id / "selected_action" / "selected_action.json"
+            )
             self.assertTrue(graph_path.exists())
             self.assertTrue(context_path.exists())
             self.assertTrue(validation_path.exists())
+            self.assertTrue(selected_action_path.exists())
             validation = json.loads(validation_path.read_text(encoding="utf-8"))
             self.assertTrue(validation["validation"]["passed"])
 

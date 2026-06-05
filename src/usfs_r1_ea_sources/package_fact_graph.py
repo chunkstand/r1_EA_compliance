@@ -23,6 +23,7 @@ from .package_fact_graph_terms import LOCATION_NODE_TYPES
 from .package_fact_graph_terms import PACKAGE_FACT_EXTRACTION_METHOD_VERSION
 from .package_fact_graph_terms import UNCERTAINTY_RECORD_STATUSES
 from .records import sha256_file
+from .selected_action import build_selected_action_artifact
 
 
 PACKAGE_FACT_GRAPH_SCHEMA_VERSION = "package-fact-graph-v0"
@@ -83,6 +84,19 @@ def build_package_fact_graph(
     manifest_sha256 = sha256_file(package_manifest_path)
     chunks_sha256 = sha256_file(package_chunks_path)
     profiles_sha256 = sha256_file(forest_plan_profiles_path)
+    selected_action_result = build_selected_action_artifact(
+        output_dir=output_dir,
+        review_id=review_id,
+        source_set_id=source_set_id,
+        package_manifest_path=package_manifest_path,
+        package_chunks_path=package_chunks_path,
+        package_manifest=package_manifest,
+        package_chunks=package_chunks,
+        package_manifest_sha256=manifest_sha256,
+        package_chunks_sha256=chunks_sha256,
+        package_path=package_path,
+        created_at=created_at,
+    )
 
     extraction = _extract_package_facts(
         package_chunks=package_chunks,
@@ -122,6 +136,11 @@ def build_package_fact_graph(
                 FOREST_PLAN_CONTEXT_FACT_EXTRACTION_METHOD_VERSION
             ),
             "forest_plan_profiles": profiles.schema_version,
+            "selected_action_extraction": (
+                selected_action_result.summary["extraction_method_version"]
+                if "extraction_method_version" in selected_action_result.summary
+                else "selected-action-extraction-v0"
+            ),
         },
         "source_package": _source_package_metadata(
             package_path=package_path,
@@ -132,6 +151,23 @@ def build_package_fact_graph(
             "package_chunks_path": str(package_chunks_path),
             "forest_plan_profiles_path": str(forest_plan_profiles_path),
             "forest_plan_context_path": str(forest_plan_context_path),
+            "selected_action_path": str(selected_action_result.selected_action_path),
+            "selected_action_validation_path": str(
+                selected_action_result.selected_action_validation_path
+            ),
+        },
+        "selected_action_sha256": selected_action_result.summary["selected_action_sha256"],
+        "selected_action_scope": {
+            "scope_status": selected_action_result.summary["selected_action_scope_status"],
+            "package_chunk_count": selected_action_result.summary[
+                "selected_action_scope_chunk_count"
+            ],
+            "evidence_span_count": selected_action_result.summary[
+                "selected_action_evidence_span_count"
+            ],
+            "validation_passed": selected_action_result.summary[
+                "selected_action_validation_passed"
+            ],
         },
         "forest_plan_context_bridge": forest_plan_context_bridge,
         "extraction_summary": summary,
@@ -153,6 +189,7 @@ def build_package_fact_graph(
         package_manifest_sha256=manifest_sha256,
         package_chunks_sha256=chunks_sha256,
         package_fact_graph_sha256=graph_sha256,
+        selected_action_summary=selected_action_result.summary,
         extraction=extraction,
         summary=summary,
     )
@@ -170,11 +207,26 @@ def build_package_fact_graph(
         "package_chunks_sha256": chunks_sha256,
         "package_fact_graph_sha256": graph_sha256,
         "package_context_sha256": context_sha256,
+        "selected_action_sha256": selected_action_result.summary["selected_action_sha256"],
         "created_at": created_at,
         "validation": validation,
+        "selected_action_validation": {
+            "passed": selected_action_result.summary["selected_action_validation_passed"],
+            "scope_status": selected_action_result.summary["selected_action_scope_status"],
+            "selected_action_path": str(selected_action_result.selected_action_path),
+            "selected_action_validation_path": str(
+                selected_action_result.selected_action_validation_path
+            ),
+        },
         "summary": {
             **summary,
             "validation_passed": validation["passed"],
+            "selected_action_validation_passed": selected_action_result.summary[
+                "selected_action_validation_passed"
+            ],
+            "selected_action_scope_status": selected_action_result.summary[
+                "selected_action_scope_status"
+            ],
         },
     }
 
@@ -198,6 +250,20 @@ def build_package_fact_graph(
         "package_fact_graph_validation_path": str(validation_summary_path),
         "package_fact_graph_sha256": graph_sha256,
         "package_context_sha256": context_sha256,
+        "selected_action_sha256": selected_action_result.summary["selected_action_sha256"],
+        "selected_action_path": str(selected_action_result.selected_action_path),
+        "selected_action_validation_path": str(
+            selected_action_result.selected_action_validation_path
+        ),
+        "selected_action_validation_passed": selected_action_result.summary[
+            "selected_action_validation_passed"
+        ],
+        "selected_action_scope_status": selected_action_result.summary[
+            "selected_action_scope_status"
+        ],
+        "selected_action_scope_chunk_count": selected_action_result.summary[
+            "selected_action_scope_chunk_count"
+        ],
         **summary,
     }
     return PackageFactGraphResult(
@@ -356,6 +422,7 @@ def _build_applicability_context(
     package_manifest_sha256: str,
     package_chunks_sha256: str,
     package_fact_graph_sha256: str,
+    selected_action_summary: dict[str, Any],
     extraction: dict[str, Any],
     summary: dict[str, Any],
 ) -> dict[str, Any]:
@@ -379,6 +446,25 @@ def _build_applicability_context(
         "package_manifest_sha256": package_manifest_sha256,
         "package_chunks_sha256": package_chunks_sha256,
         "package_fact_graph_sha256": package_fact_graph_sha256,
+        "selected_action_sha256": selected_action_summary.get("selected_action_sha256"),
+        "artifact_paths": {
+            "selected_action_path": selected_action_summary.get("selected_action_path"),
+            "selected_action_validation_path": selected_action_summary.get(
+                "selected_action_validation_path"
+            ),
+        },
+        "selected_action_scope": {
+            "scope_status": selected_action_summary.get("selected_action_scope_status"),
+            "package_chunk_count": selected_action_summary.get(
+                "selected_action_scope_chunk_count"
+            ),
+            "evidence_span_count": selected_action_summary.get(
+                "selected_action_evidence_span_count"
+            ),
+            "validation_passed": selected_action_summary.get(
+                "selected_action_validation_passed"
+            ),
+        },
         "package_section_map": extraction["section_map"],
         "section_family_bindings": _section_family_bindings(extraction["section_map"]),
         "project_type": _facts_by_type(compact_facts, "action"),

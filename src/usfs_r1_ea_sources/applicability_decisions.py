@@ -31,6 +31,10 @@ from .applicability_decision_outputs import decision_summary
 from .applicability_decision_outputs import partition_authority_record
 from .applicability_decision_outputs import write_decision_report
 from .records import sha256_file
+from .selected_action import load_selected_action_from_artifact_path
+from .selected_action import selected_action_chunk_ids
+from .selected_action import selected_action_path_from_artifact
+from .selected_action import selected_action_summary
 
 
 APPLICABILITY_DECISIONS_SCHEMA_VERSION = "applicability-decisions-v0"
@@ -96,6 +100,12 @@ def build_applicability_decisions(
     graph_rows = _read_required_jsonl(graph_trace_path, "applicability graph trace")
     package_chunks_path = _optional_artifact_path(package_fact_graph, "package_chunks_path")
     package_chunks = _read_jsonl_if_exists(package_chunks_path)
+    selected_action_path = (
+        selected_action_path_from_artifact(package_fact_graph)
+        or selected_action_path_from_artifact(package_context)
+    )
+    selected_action = load_selected_action_from_artifact_path(selected_action_path)
+    selected_action_scope_summary = selected_action_summary(selected_action)
 
     if source_set_id is None:
         source_set_id = str(authority_universe.get("source_set_id") or "").strip()
@@ -122,6 +132,9 @@ def build_applicability_decisions(
         package_fact_graph.get("package_fact_graph_sha256")
         or sha256_file(package_fact_graph_path)
     )
+    selected_action_sha256 = str(
+        selected_action_scope_summary.get("selected_action_sha256") or ""
+    )
     retrieval_trace_sha256 = sha256_file(retrieval_trace_path)
     graph_trace_sha256 = sha256_file(graph_trace_path)
     catalog_sha256 = str(authority_universe.get("catalog_sha256") or "")
@@ -130,6 +143,7 @@ def build_applicability_decisions(
         "package_manifest_sha256": package_manifest_sha256,
         "package_chunks_sha256": package_chunks_sha256,
         "package_fact_graph_sha256": package_fact_graph_sha256,
+        "selected_action_sha256": selected_action_sha256,
         "retrieval_trace_sha256": retrieval_trace_sha256,
         "graph_trace_sha256": graph_trace_sha256,
         "search_coverage_certificates_sha256": None,
@@ -140,10 +154,15 @@ def build_applicability_decisions(
     retrieval_by_candidate = _records_by_candidate(retrieval_rows)
     graph_by_candidate = _records_by_candidate(graph_rows)
     package_nodes = _package_fact_nodes(package_fact_graph)
-    package_present_values = _present_package_values(package_nodes)
+    selected_action_package_nodes = _scope_package_nodes_to_selected_action(
+        package_nodes=package_nodes,
+        selected_action=selected_action,
+    )
+    package_present_values = _present_package_values(selected_action_package_nodes)
     trigger_search_index = _build_trigger_search_index(
         package_nodes=package_nodes,
         package_chunks=package_chunks,
+        selected_action=selected_action,
     )
     decisions: list[dict[str, Any]] = []
     certificates: list[dict[str, Any]] = []
@@ -169,6 +188,8 @@ def build_applicability_decisions(
             package_fact_graph=package_fact_graph,
             package_context=package_context,
             package_chunks=package_chunks,
+            selected_action=selected_action,
+            selected_action_summary=selected_action_scope_summary,
             package_present_values=package_present_values,
             trigger_search_index=trigger_search_index,
             retrieval_rows=candidate_retrieval_rows,
@@ -235,6 +256,7 @@ def build_applicability_decisions(
         "package_manifest_sha256": package_manifest_sha256,
         "package_chunks_sha256": package_chunks_sha256,
         "package_fact_graph_sha256": package_fact_graph_sha256,
+        "selected_action_sha256": selected_action_sha256,
         "retrieval_trace_sha256": retrieval_trace_sha256,
         "graph_trace_sha256": graph_trace_sha256,
         "search_coverage_certificates_sha256": search_coverage_certificates_sha256,
@@ -293,6 +315,7 @@ def build_applicability_decisions(
         authority_universe_path=authority_universe_path,
         package_fact_graph_path=package_fact_graph_path,
         package_applicability_context_path=package_applicability_context_path,
+        selected_action_path=selected_action_path,
         retrieval_trace_path=retrieval_trace_path,
         graph_trace_path=graph_trace_path,
         decisions_path=decisions_path,
@@ -311,6 +334,7 @@ def build_applicability_decisions(
         package_manifest_sha256=package_manifest_sha256,
         package_chunks_sha256=package_chunks_sha256,
         package_fact_graph_sha256=package_fact_graph_sha256,
+        selected_action_sha256=selected_action_sha256,
         retrieval_trace_sha256=retrieval_trace_sha256,
         graph_trace_sha256=graph_trace_sha256,
         search_coverage_certificates_sha256=search_coverage_certificates_sha256,
@@ -358,6 +382,8 @@ def _decision_for_candidate(
     package_fact_graph: dict[str, Any],
     package_context: dict[str, Any],
     package_chunks: list[dict[str, Any]],
+    selected_action: dict[str, Any] | None,
+    selected_action_summary: dict[str, Any],
     package_present_values: dict[str, set[str]],
     trigger_search_index: dict[str, Any],
     retrieval_rows: list[dict[str, Any]],
@@ -377,7 +403,10 @@ def _decision_for_candidate(
         if row.get("selected_status") == "selected" and row.get("graph_path_id")
     ]
     selected_result_ids, rejected_result_ids, trace_ids = _retrieval_lineage(retrieval_rows)
-    package_results = _selected_package_results(retrieval_rows)
+    package_results = _selected_package_results(
+        retrieval_rows,
+        selected_action=selected_action,
+    )
     negative_groups = _trigger_groups(candidate.get("negative_trigger_groups"))
     positive_groups = _trigger_groups(candidate.get("positive_trigger_groups"))
     positive_match = _trigger_match(
@@ -613,6 +642,10 @@ def _decision_for_candidate(
         "coverage_boundary": coverage_boundary,
         "package_fact_graph_sha256": package_fact_graph.get("package_fact_graph_sha256"),
         "package_context_sha256": package_context.get("package_context_sha256"),
+        "selected_action_sha256": selected_action_summary.get("selected_action_sha256"),
+        "selected_action_scope_status": selected_action_summary.get(
+            "selected_action_scope_status"
+        ),
         "trigger_arbitration": trigger_arbitration,
     }
     arbitration_summary = _arbitration_summary(
@@ -662,6 +695,9 @@ def _decision_for_candidate(
             "predicate_inputs_sha256": _stable_sha256(predicate_inputs),
             "package_fact_graph_sha256": package_fact_graph.get("package_fact_graph_sha256"),
             "package_context_sha256": package_context.get("package_context_sha256"),
+            "selected_action_sha256": selected_action_summary.get(
+                "selected_action_sha256"
+            ),
         },
         "predicate_result": {
             "status": status,
@@ -711,6 +747,7 @@ def _decision_for_candidate(
             "required" if status == "needs_adjudication" else "not_required"
         ),
         "reviewer_notes": reviewer_notes,
+        "selected_action_scope": dict(selected_action_summary),
         "freshness": dict(freshness),
     }
 
@@ -744,6 +781,23 @@ def _assert_source_set_matches(
         raise ValueError(
             f"Source-set mismatch for {source_set_id}: {', '.join(mismatches)}"
         )
+
+
+def _scope_package_nodes_to_selected_action(
+    *,
+    package_nodes: list[dict[str, Any]],
+    selected_action: dict[str, Any] | None,
+) -> list[dict[str, Any]]:
+    action_chunk_ids = selected_action_chunk_ids(selected_action)
+    if action_chunk_ids is None:
+        return package_nodes
+    if not action_chunk_ids:
+        return []
+    return [
+        node
+        for node in package_nodes
+        if set(_strings(node.get("package_chunk_ids"))) & action_chunk_ids
+    ]
 
 
 def _validate_safe_segment(value: str | None, field_name: str) -> None:

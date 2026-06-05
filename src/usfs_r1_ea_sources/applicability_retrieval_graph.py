@@ -7,6 +7,7 @@ from typing import Any
 from .applicability_retrieval_runtime import _package_node_matches_candidate
 from .applicability_retrieval_runtime import _stable_id
 from .applicability_retrieval_runtime import _strings
+from .selected_action import selected_action_chunk_ids
 
 
 APPLICABILITY_GRAPH_TRACE_SCHEMA_VERSION = "applicability-graph-trace-v0"
@@ -20,6 +21,7 @@ def _graph_trace_rows_for_candidate(
     candidate: dict[str, Any],
     retrieval_trace_rows: list[dict[str, Any]],
     package_fact_graph: dict[str, Any],
+    selected_action: dict[str, Any] | None,
     package_graph_identity: dict[str, Any],
     evidence_graph_identity: dict[str, Any],
     graph_nodes: list[dict[str, Any]],
@@ -40,6 +42,7 @@ def _graph_trace_rows_for_candidate(
     trace_graph = _candidate_trace_graph(
         candidate=candidate,
         package_fact_graph=package_fact_graph,
+        selected_action=selected_action,
         graph_nodes=graph_nodes,
         graph_edges=graph_edges,
         external_graph_index=external_graph_index,
@@ -134,6 +137,7 @@ def _candidate_trace_graph(
     *,
     candidate: dict[str, Any],
     package_fact_graph: dict[str, Any],
+    selected_action: dict[str, Any] | None,
     graph_nodes: list[dict[str, Any]],
     graph_edges: list[dict[str, Any]],
     rule_claim_links: list[dict[str, Any]],
@@ -206,6 +210,7 @@ def _candidate_trace_graph(
 
     for node in _matching_package_nodes(
         package_fact_graph=package_fact_graph,
+        selected_action=selected_action,
         candidate=candidate,
         package_match_cache=package_match_cache if package_match_cache is not None else {},
     ):
@@ -358,10 +363,12 @@ def _external_graph_index(
 def _matching_package_nodes(
     *,
     package_fact_graph: dict[str, Any],
+    selected_action: dict[str, Any] | None,
     candidate: dict[str, Any],
     package_match_cache: dict[tuple, list[dict[str, Any]]],
 ) -> list[dict[str, Any]]:
-    cache_key = _package_match_cache_key(candidate)
+    action_chunk_ids = selected_action_chunk_ids(selected_action)
+    cache_key = _package_match_cache_key(candidate, action_chunk_ids=action_chunk_ids)
     cached = package_match_cache.get(cache_key)
     if cached is not None:
         return cached
@@ -370,6 +377,7 @@ def _matching_package_nodes(
         matches = _scoped_package_nodes(
             package_fact_graph=package_fact_graph,
             scoped_ids=scoped_ids,
+            action_chunk_ids=action_chunk_ids,
         )
     else:
         matches = [
@@ -377,17 +385,29 @@ def _matching_package_nodes(
             for node in package_fact_graph.get("nodes") or []
             if isinstance(node, dict)
             and node.get("node_type") not in {"evidence_span", "package_section"}
+            and _node_in_selected_action_scope(
+                node=node,
+                action_chunk_ids=action_chunk_ids,
+            )
             and _package_node_matches_graph_contract(node, candidate)
         ]
     package_match_cache[cache_key] = matches
     return matches
 
 
-def _package_match_cache_key(candidate: dict[str, Any]) -> tuple:
+def _package_match_cache_key(
+    candidate: dict[str, Any],
+    *,
+    action_chunk_ids: set[str] | None = None,
+) -> tuple:
     scoped_ids = _scoped_package_fact_ids(candidate)
+    action_scope_key = (
+        tuple(sorted(action_chunk_ids)) if action_chunk_ids is not None else None
+    )
     if any(scoped_ids.values()):
         return (
             "scoped",
+            action_scope_key,
             tuple(sorted(scoped_ids["geography"])),
             tuple(sorted(scoped_ids["management_area"])),
             tuple(sorted(scoped_ids["overlay"])),
@@ -411,12 +431,25 @@ def _package_match_cache_key(candidate: dict[str, Any]) -> tuple:
     if not isinstance(neighbor_filters, dict):
         neighbor_filters = {}
     return (
+        action_scope_key,
         tuple(sorted(_strings(candidate.get("required_package_fact_types")))),
         tuple(term.casefold() for term in terms),
         tuple(sorted(_strings(neighbor_filters.get("geographic_area_ids")))),
         tuple(sorted(_strings(neighbor_filters.get("management_area_ids")))),
         tuple(sorted(_strings(neighbor_filters.get("overlay_ids")))),
     )
+
+
+def _node_in_selected_action_scope(
+    *,
+    node: dict[str, Any],
+    action_chunk_ids: set[str] | None,
+) -> bool:
+    if action_chunk_ids is None:
+        return True
+    if not action_chunk_ids:
+        return False
+    return bool(set(_strings(node.get("package_chunk_ids"))) & action_chunk_ids)
 
 
 def _package_node_matches_graph_contract(node: dict[str, Any], candidate: dict[str, Any]) -> bool:
@@ -455,6 +488,7 @@ def _scoped_package_nodes(
     *,
     package_fact_graph: dict[str, Any],
     scoped_ids: dict[str, set[str]],
+    action_chunk_ids: set[str] | None,
 ) -> list[dict[str, Any]]:
     matches = []
     for node in package_fact_graph.get("nodes") or []:
@@ -463,6 +497,11 @@ def _scoped_package_nodes(
         node_type = str(node.get("node_type") or "")
         expected_values = scoped_ids.get(node_type) or set()
         if not expected_values:
+            continue
+        if not _node_in_selected_action_scope(
+            node=node,
+            action_chunk_ids=action_chunk_ids,
+        ):
             continue
         if str(node.get("normalized_value") or "") in expected_values:
             matches.append(node)

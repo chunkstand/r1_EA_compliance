@@ -43,16 +43,22 @@ history below.
   direct Final EA PDFs and final decision documents under
   `source_library/reviews/_intake/region1-example-bitterroot-mud-creek-55744/`.
   `ea-review` passed on `11/11` files with `1,167` package chunks and no
-  unsupported findings. The fresh-EA pipeline then failed closed before rule
-  pack generation: `applicability_validation` found `59` applicable, `886` not
-  applicable, and `1` needs-adjudication authority
-  (`minerals_energy_authorities_authority_template`). `applicability-gate-graph`
-  validated structurally with `998` nodes, `997` edges, `0` failed graph
-  checks, `2` blocked gates, and `1` pending gate; phase-eval failed `27/30`
-  on applicability, generated-rule-pack, and compliance-review blockers. This
-  is not a fourth completed full-review case. It is evidence that graph gates
-  preserve fresh unresolved review states and prevent false-green downstream
-  review. Metrics are in
+  unsupported findings. The initial fresh-EA pipeline failed closed before rule
+  pack generation on one needs-adjudication authority
+  (`minerals_energy_authorities_authority_template`). The follow-up
+  selected-action slice now makes `selected_action/selected_action.json` and
+  `selected_action_validation.json` first-class applicability artifacts and
+  scopes package trigger evidence to selected-action package chunk IDs. Replayed
+  Mud Creek applicability has `946` decisions, `38` applicable, `908` not
+  applicable, `0` unresolved, and `0` needs-adjudication authorities; the
+  minerals-energy family is `not_applicable` with
+  `basis_type=absent_trigger_evidence`. Applicability validation and generated
+  rule-pack validation pass, producing a `38`-rule generated pack.
+  `applicability-gate-graph` validates structurally with `998` nodes, `997`
+  edges, `0` failed graph checks, and no blocked gates. `phase-eval` now passes
+  `29/30`; the only blocker is the missing compliance review/matrix for this
+  ad hoc packet. This is selected-action applicability proof, not a fourth
+  completed full-review case. Metrics are in
   `docs/MUD_CREEK_GRAPH_GATE_FRESH_EA_PROBE_RESULTS.md`.
 - latest resolved system-evaluation improvement slice:
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` is the

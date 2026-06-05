@@ -262,6 +262,10 @@ def validate_generated_rule_pack(
             applicability_validation,
             "package_fact_graph_sha256",
         ),
+        "selected_action_sha256": _hash_from_validation(
+            applicability_validation,
+            "selected_action_sha256",
+        ),
         "retrieval_trace_sha256": _hash_from_validation(
             applicability_validation,
             "retrieval_trace_sha256",

@@ -217,7 +217,13 @@ def _write_package_cache(output_dir: Path, review_id: str) -> None:
             heading="Roads and Access",
             text=(
                 "The Proposed Action reserves Right-of-Way for Big Timber Creek Road "
-                "No. 197."
+                "No. 197. The Selected Action occurs in the Crazy Mountains Backcountry "
+                "Area of the Bridger, Bangtail, and Crazy Mountains Geographic Area "
+                "and intersects an Inventoried Roadless Area. It identifies Endangered "
+                "Species Act Section 7 consultation and would affect wetlands; a Clean "
+                "Water Act Section 404 permit may be required. No mining is planned. "
+                "Restoration would expose mineral soil for seed germination. "
+                "The Sioux Geographic Area is not part of the project area."
             ),
         ),
         _package_chunk(
@@ -240,6 +246,18 @@ def _write_package_cache(output_dir: Path, review_id: str) -> None:
             text=(
                 "Effects from livestock grazing may be possible in the cumulative "
                 "effects area."
+            ),
+        ),
+        _package_chunk(
+            review_id=review_id,
+            artifact_sha256=artifact_sha256,
+            index=6,
+            section="Affected Environment",
+            heading="Minerals and Energy Resources",
+            text=(
+                "Minerals and Energy Resources. Mineral activity will continue under "
+                "the 1872 mining law, and oil and gas leasing may occur in the broader "
+                "analysis area."
             ),
         ),
     ]

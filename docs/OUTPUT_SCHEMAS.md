@@ -1715,6 +1715,8 @@ Required artifacts:
 - `applicability_gate_graph.json`
 - `applicability_gate_graph_summary.json`
 - `applicability_gate_graph_validation.json`
+- `../selected_action/selected_action.json`
+- `../selected_action/selected_action_validation.json`
 - `package_fact_graph.json`
 - `package_applicability_context.json`
 - `package_fact_graph_validation.json`
@@ -1765,6 +1767,7 @@ The target review sequence is:
 ```text
 EA package + source library + authority universe
   -> NEPA applicability gate graph
+  -> selected/proposed action scope
   -> package fact graph
   -> per-authority hybrid retrieval
   -> graph expansion and dependency tracing
@@ -1892,9 +1895,14 @@ Each candidate authority record includes:
 facts used before applicability decisions are attempted. It includes:
 
 - `applicability_run_id`, `review_id`, `source_set_id`, `package_manifest_sha256`,
-  `package_chunks_sha256`, and `package_fact_graph_sha256`
+  `package_chunks_sha256`, `selected_action_sha256`, and `package_fact_graph_sha256`
 - package fact graph metadata: `package_fact_graph_id`, `created_at`, extraction method versions,
   source package path, and extraction summary
+- `artifact_paths.selected_action_path` and
+  `artifact_paths.selected_action_validation_path`, pointing to the first-class selected/proposed
+  action scope artifact that downstream applicability uses for package trigger matching
+- `selected_action_scope`, recording the selected-action scope status, package chunk count,
+  evidence span count, and validation pass/fail state
 - `forest_plan_context_bridge`, when `forest_plan_context.json` exists for the review, reports
   whether context was loaded, the context path/schema version, context-derived fact counts, evidence
   span counts, skipped evidence counts, and fact-type counts. Context-derived facts are emitted only
@@ -1943,6 +1951,29 @@ Unsupported inferred facts cannot make an applicability run reviewer-ready. A fa
 by a later model-assisted evidence layer, but the reviewer-ready graph must bind final facts to
 deterministic package spans or human adjudication.
 
+`selected_action.json` has schema version `selected-action-v0` and is written under
+`source_library/reviews/<review_id>/selected_action/`. It is the package-action boundary for
+applicability. The artifact extracts the selected alternative, selected action, decision action, or
+proposed action from package chunks and records:
+
+- `selected_action_id`, `review_id`, `source_set_id`, `created_at`,
+  `package_manifest_sha256`, `package_chunks_sha256`, and `selected_action_sha256`
+- extraction method version and source package metadata
+- `selected_action_scope` with scope status, driver role, package chunk IDs, evidence span IDs,
+  action statement count, action-role counts, action-text hash, and matched cues
+- `action_statements` and `evidence_spans` with package chunk IDs, citations, section/heading,
+  page labels, offsets, action role, matched cues, score, excerpt, and text hash
+- `excluded_context_summary`, including broad resource/effects/no-action chunks excluded from the
+  action scope
+- validation checks proving package cache presence, selected/proposed action scope presence, span
+  resolution to package chunks, and broad background exclusion accounting
+
+`selected_action_validation.json` has schema version `selected-action-validation-v0` and records
+the selected-action artifact hash, package input hashes, validation checks, and summary. A
+reviewer-ready applicability run requires this validation to pass. If the selected-action artifact
+is missing or empty, package trigger matching fails closed instead of falling back to broad package
+context.
+
 `package_applicability_context.json` has schema version `package-applicability-context-v0` and
 includes:
 
@@ -1950,20 +1981,24 @@ includes:
 - `package_path`
 - `package_manifest_sha256`
 - `package_chunks_sha256`
+- `selected_action_sha256`
 - `package_fact_graph_sha256`
 - `package_context_sha256`
 - package section map and section-family bindings
 - project type, federal action signals, authority signals, forest unit, project location signals,
   geography, management areas, overlays, consultations, permits, public-involvement signals,
   decision posture, and supporting-document signals used for applicability
+- selected-action scope status, package chunk count, evidence span count, validation status, and
+  selected-action artifact paths
 - extracted package facts with chunk IDs, citations, page labels, character offsets, and extraction
   source metadata
 
 `package_fact_graph_validation.json` has schema version `package-fact-graph-validation-v0` and
 summarizes the package graph validation result. It includes `review_id`, `source_set_id`,
-`package_manifest_sha256`, `package_chunks_sha256`, `package_fact_graph_sha256`,
-`package_context_sha256`, validation checks, negative-context location facts, uncertainty records,
-and fact-count summaries. Uncertainty records include contradictory package evidence, weakly worded
+`package_manifest_sha256`, `package_chunks_sha256`, `selected_action_sha256`,
+`package_fact_graph_sha256`, `package_context_sha256`, validation checks, negative-context
+location facts, uncertainty records, and fact-count summaries. Uncertainty records include
+contradictory package evidence, weakly worded
 facts with structured `evidence_strength` details, and missing common fact types that later
 applicability stages must handle. It is a Milestone 3 validation artifact only; it does not contain
 applicability decisions or compliance findings.
@@ -1985,6 +2020,9 @@ includes:
   citation label, page label, offsets, matched terms, and text hash
 - package-result provenance carries package graph `confidence_class` and `evidence_strength` when
   the retrieval row was seeded by a package fact node
+- package fact and package section results are scoped to `selected_action.json` package chunk IDs
+  when that artifact is present; missing selected-action scope produces no package trigger results
+  instead of reverting to broad package context
 - fusion metadata when multiple searches are combined, including the fusion strategy, input result
   sets, reciprocal-rank-fusion parameters when used, and final rank order
 
@@ -2033,6 +2071,8 @@ Each applicability decision includes:
 - package evidence spans with package chunk IDs, citation labels, section families, page labels,
   offsets, matched terms, text snippets, compatibility confidence classes, and structured
   `evidence_strength`
+- `selected_action_scope`, summarizing the selected-action artifact hash, scope status, scope chunk
+  count, evidence span count, and validation state used by the deterministic predicate
 - `arbitration_summary` with schema version `applicability-evidence-arbitration-v0`, recording
   active per-trigger evidence arbitration. The summary includes positive and negative trigger
   group results, matched evidence IDs, package chunk/fact/retrieval refs, evidence strength counts,
@@ -2060,9 +2100,9 @@ Each applicability decision includes:
 - missing evidence, contradiction notes, confidence classification, adjudication state, and reviewer
   notes
 - freshness fields: `authority_universe_sha256`, `package_manifest_sha256`,
-  `package_chunks_sha256`, `package_fact_graph_sha256`, `retrieval_trace_sha256`,
-  `graph_trace_sha256`, `search_coverage_certificates_sha256`, `source_set_id`, and
-  `catalog_sha256`
+  `package_chunks_sha256`, `selected_action_sha256`, `package_fact_graph_sha256`,
+  `retrieval_trace_sha256`, `graph_trace_sha256`, `search_coverage_certificates_sha256`,
+  `source_set_id`, and `catalog_sha256`
 
 `applicable_authorities.json` has schema version `applicable-authorities-v0` and contains only
 decision records whose final status is `applicable`. It includes:
@@ -2074,6 +2114,7 @@ decision records whose final status is `applicable`. It includes:
 - `package_manifest_sha256`
 - `applicability_decisions_sha256`
 - `package_chunks_sha256`
+- `selected_action_sha256`
 - `package_fact_graph_sha256`
 - `retrieval_trace_sha256`
 - `graph_trace_sha256`
@@ -2131,8 +2172,8 @@ misses still require enough search coverage to show the predicate was actually t
 `applicability_provenance.json` has schema version `applicability-provenance-v0` and records
 W3C PROV-style run lineage. It includes:
 
-- entities for the EA package manifest, package chunks, source-set manifest, catalog, authority
-  universe, package fact graph, retrieval trace, graph trace, decision ledger, coverage
+- entities for the EA package manifest, package chunks, selected action, source-set manifest,
+  catalog, authority universe, package fact graph, retrieval trace, graph trace, decision ledger, coverage
   certificates, adjudication artifacts, validation artifact, applicable/non-applicable artifacts,
   generated rule pack, and generated rule-pack validation
 - activities for package fact extraction, retrieval, graph expansion, deterministic predicate
@@ -2173,17 +2214,18 @@ includes:
 - `reviewer_ready`
 - status counts by applicability decision status
 - candidate, applicable, non-applicable, unresolved, and needs-adjudication counts
-- hashes for the authority universe, package manifest, package chunks, decisions, applicable
-  authorities, non-applicable authorities, package fact graph, retrieval trace, graph trace, search
-  coverage certificates, provenance, generated rule pack when present, catalog, source claims,
-  rule-claim links, and Forest Plan component inventory when present
+- hashes for the authority universe, package manifest, package chunks, selected action, decisions,
+  applicable authorities, non-applicable authorities, package fact graph, retrieval trace, graph
+  trace, search coverage certificates, provenance, generated rule pack when present, catalog,
+  source claims, rule-claim links, and Forest Plan component inventory when present
 - validation failure records with failure category, affected authority IDs, and artifact paths
 - generated-rule-pack readiness status
 
-The validation gate also proves that `package_fact_graph_validation.json` passed for the current
-package artifacts, human-adjudicated decisions can be replayed from a passing adjudication eval,
-contradictory final package evidence has a human adjudication record, partition and coverage hashes
-match the current upstream artifacts, and required provenance entities point at non-stale hashes.
+The validation gate also proves that `selected_action_validation.json` and
+`package_fact_graph_validation.json` passed for the current package artifacts, human-adjudicated
+decisions can be replayed from a passing adjudication eval, contradictory final package evidence
+has a human adjudication record, partition and coverage hashes match the current upstream
+artifacts, and required provenance entities point at non-stale hashes.
 
 Hard validation failures include:
 
@@ -2210,8 +2252,8 @@ Hard validation failures include:
   source and package context
 - `source_set_stale`: source-set, catalog, source-claim, or authority-universe hashes do not match the
   evaluated source set
-- `package_cache_stale`: package manifest, package chunk, or package fact graph hashes do not match
-  the applicability context
+- `package_cache_stale`: package manifest, package chunk, selected-action, or package fact graph
+  hashes do not match the applicability context
 - `retrieval_trace_stale`: retrieval trace hashes do not match the searched package, source, or index
   artifacts
 - `graph_trace_stale`: graph trace hashes do not match the searched graph artifacts

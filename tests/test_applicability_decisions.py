@@ -362,7 +362,7 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             )
             self.assertEqual(
                 {tuple(group) for group in decision["weak_auxiliary_trigger_groups"]},
-                {("trail",), ("grazing",)},
+                {("trail",)},
             )
             self.assertTrue(decision["reviewer_notes"])
             arbitration = decision["arbitration_summary"]
@@ -381,7 +381,7 @@ class ApplicabilityDecisionTests(unittest.TestCase):
                 "decisive",
             )
             self.assertEqual(groups[("trail",)]["diagnostic_treatment"], "weak_only")
-            self.assertEqual(groups[("grazing",)]["diagnostic_treatment"], "weak_only")
+            self.assertEqual(groups[("grazing",)]["diagnostic_treatment"], "unmatched")
             self.assertGreater(groups[("road",)]["evidence_strength_counts"]["observed"], 0)
             self.assertNotIn("weak_signal", groups[("road",)]["evidence_strength_counts"])
             self.assertIn(
@@ -393,17 +393,9 @@ class ApplicabilityDecisionTests(unittest.TestCase):
                 "conditional",
                 groups[("trail",)]["evidence_strength_class_counts"],
             )
-            self.assertIn(
-                "speculative",
-                groups[("grazing",)]["evidence_strength_class_counts"],
-            )
             self.assertTrue(groups[("trail",)]["weak_signal_reasons"])
-            self.assertTrue(groups[("grazing",)]["weak_signal_reasons"])
             self.assertTrue(
                 any("matched `" in note for note in groups[("trail",)]["weak_signal_reasons"])
-            )
-            self.assertTrue(
-                any("may be possible" in note for note in groups[("grazing",)]["weak_signal_reasons"])
             )
             trail_details = groups[("trail",)]["weak_signal_details"]
             self.assertTrue(
@@ -416,13 +408,6 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             )
             self.assertTrue(
                 any("Trail easements" in detail["evidence_window"] for detail in trail_details)
-            )
-            grazing_details = groups[("grazing",)]["weak_signal_details"]
-            self.assertTrue(
-                any(
-                    detail.get("matched_phrase") == "may be possible"
-                    for detail in grazing_details
-                )
             )
             self.assertTrue(arbitration["source_evidence_ids"])
             self.assertTrue(arbitration["selected_retrieval_result_ids"])
@@ -506,6 +491,114 @@ class ApplicabilityDecisionTests(unittest.TestCase):
                 decision["arbitration_summary"]["decision_effect"],
                 "positive_precedence_over_negative_trigger",
             )
+
+    def test_selected_action_scope_prevents_broad_minerals_background_conflict(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            source_set_id = "source-set-unit"
+            candidate = _rule_candidate(
+                source_set_id=source_set_id,
+                rule_id="minerals_selected_action_scope",
+                source_record_id="R1EA-ROAD",
+                authority_category="regulation",
+                applicability_mode="conditional",
+                source_query="National Forest roads access authority",
+                package_query="mining",
+                positive_trigger_groups=[["mining"]],
+                negative_trigger_groups=[["no mining"]],
+            )
+            candidate["required_source_evidence"]["requires_source_record"] = False
+            fixture = _write_decision_fixture(
+                Path(tmp),
+                extra_candidates=[candidate],
+            )
+            selected_action_path = (
+                fixture["output_dir"]
+                / "reviews"
+                / fixture["review_id"]
+                / "selected_action"
+                / "selected_action.json"
+            )
+            selected_action = json.loads(selected_action_path.read_text(encoding="utf-8"))
+            self.assertIn("mineral soil", json.dumps(selected_action))
+
+            result = build_applicability_decisions(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+
+            decisions = {
+                row["candidate_authority_id"]: row for row in _read_jsonl(result.decisions_path)
+            }
+            decision = decisions[
+                "rule-template:unit-pack:0.1.0:minerals_selected_action_scope"
+            ]
+            self.assertEqual(decision["status"], "not_applicable")
+            self.assertEqual(decision["basis_type"], "negative_package_evidence")
+            self.assertEqual(decision["arbitration_status"], "negative_trigger_decisive")
+            self.assertNotEqual(decision["arbitration_status"], "positive_negative_conflict")
+            self.assertTrue(decision["negative_evidence_spans"])
+            self.assertEqual(
+                decision["selected_action_scope"]["selected_action_scope_status"],
+                "selected_action_found",
+            )
+            self.assertNotIn("Mineral activity will continue", json.dumps(decision))
+
+    def test_selected_action_mineral_soil_does_not_trigger_minerals_family(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            source_set_id = "source-set-unit"
+            candidate = _rule_candidate(
+                source_set_id=source_set_id,
+                rule_id="minerals_selected_action_soil_false_positive",
+                source_record_id="R1EA-ROAD",
+                authority_category="regulation",
+                applicability_mode="conditional",
+                source_query="National Forest minerals authority",
+                package_query=(
+                    "mineral exploration mineral development plan of operations "
+                    "mineral materials energy development surface use plan oil and gas"
+                ),
+                positive_trigger_groups=[
+                    ["mineral exploration"],
+                    ["mineral development"],
+                    ["plan of operations"],
+                    ["mineral materials"],
+                    ["mineral production"],
+                    ["energy development"],
+                    ["surface use plan"],
+                    ["mine reclamation"],
+                    ["reclamation plan"],
+                    ["oil and gas"],
+                ],
+                negative_trigger_groups=[],
+            )
+            candidate["required_source_evidence"]["requires_source_record"] = False
+            fixture = _write_decision_fixture(
+                Path(tmp),
+                extra_candidates=[candidate],
+            )
+
+            result = build_applicability_decisions(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+
+            decisions = {
+                row["candidate_authority_id"]: row for row in _read_jsonl(result.decisions_path)
+            }
+            decision = decisions[
+                "rule-template:unit-pack:0.1.0:minerals_selected_action_soil_false_positive"
+            ]
+            self.assertEqual(decision["status"], "not_applicable")
+            self.assertEqual(decision["basis_type"], "absent_trigger_evidence")
+            self.assertEqual(decision["arbitration_status"], "positive_trigger_absent")
+            self.assertEqual(decision["package_evidence_spans"], [])
+            self.assertNotIn("Mineral activity will continue", json.dumps(decision))
 
     def test_uses_declared_source_evidence_when_source_retrieval_has_no_selected_hits(
         self,

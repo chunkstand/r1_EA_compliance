@@ -54,6 +54,7 @@ def build_validation_checks(
             artifacts=artifacts,
         ),
         check_package_fact_graph_validation(paths=paths, artifacts=artifacts),
+        check_selected_action_validation(paths=paths, artifacts=artifacts),
         check_candidate_decisions(candidates, decisions),
         check_partition(
             candidates=candidates,
@@ -102,6 +103,7 @@ def check_review_and_source_identity(
     failures = []
     for artifact_name in (
         "authority_universe",
+        "selected_action",
         "package_fact_graph",
         "package_applicability_context",
         "applicable_authorities",
@@ -184,6 +186,11 @@ def check_package_fact_graph_validation(
         "package_context_sha256": artifacts["package_applicability_context"].get(
             "package_context_sha256"
         ),
+        "selected_action_sha256": first_present(
+            artifacts["selected_action"].get("selected_action_sha256"),
+            artifacts["package_applicability_context"].get("selected_action_sha256"),
+            artifacts["package_fact_graph"].get("selected_action_sha256"),
+        ),
     }
     failures = []
     if not paths["package_fact_graph_validation"].exists():
@@ -228,6 +235,102 @@ def check_package_fact_graph_validation(
         not failures,
         failures,
         {"path": str(paths["package_fact_graph_validation"])},
+    )
+
+
+def check_selected_action_validation(
+    *,
+    paths: dict[str, Path],
+    artifacts: dict[str, Any],
+) -> dict[str, Any]:
+    selected_action = artifacts["selected_action"]
+    validation = artifacts["selected_action_validation"]
+    nested_validation = (
+        validation.get("validation")
+        if isinstance(validation.get("validation"), dict)
+        else {}
+    )
+    selected_action_sha256 = first_present(
+        selected_action.get("selected_action_sha256"),
+        artifacts["package_applicability_context"].get("selected_action_sha256"),
+        artifacts["package_fact_graph"].get("selected_action_sha256"),
+    )
+    expected_pairs = {
+        "package_manifest_sha256": first_present(
+            artifacts["package_applicability_context"].get("package_manifest_sha256"),
+            artifacts["package_fact_graph"].get("package_manifest_sha256"),
+        ),
+        "package_chunks_sha256": first_present(
+            artifacts["package_applicability_context"].get("package_chunks_sha256"),
+            artifacts["package_fact_graph"].get("package_chunks_sha256"),
+        ),
+        "selected_action_sha256": selected_action_sha256,
+    }
+    failures = []
+    if not paths["selected_action"].exists():
+        failures.append(
+            failure(
+                "missing_applicability_artifact",
+                artifact="selected_action",
+                path=str(paths["selected_action"]),
+            )
+        )
+    elif selected_action.get("schema_version") != "selected-action-v0":
+        failures.append(
+            failure(
+                "package_cache_stale",
+                artifact="selected_action",
+                details={
+                    "field": "schema_version",
+                    "actual": selected_action.get("schema_version"),
+                },
+            )
+        )
+    if not paths["selected_action_validation"].exists():
+        failures.append(
+            failure(
+                "missing_applicability_artifact",
+                artifact="selected_action_validation",
+                path=str(paths["selected_action_validation"]),
+            )
+        )
+    elif validation.get("schema_version") != "selected-action-validation-v0":
+        failures.append(
+            failure(
+                "package_cache_stale",
+                artifact="selected_action_validation",
+                details={
+                    "field": "schema_version",
+                    "actual": validation.get("schema_version"),
+                },
+            )
+        )
+    elif not nested_validation.get("passed"):
+        failures.append(
+            failure(
+                "package_cache_stale",
+                artifact="selected_action_validation",
+                details={
+                    "field": "validation.passed",
+                    "actual": nested_validation.get("passed"),
+                },
+            )
+        )
+    for field, expected in expected_pairs.items():
+        actual = validation.get(field)
+        if expected and actual and actual != expected:
+            failures.append(
+                failure(
+                    "package_cache_stale",
+                    artifact="selected_action_validation",
+                    details={"field": field, "expected": expected, "actual": actual},
+                )
+            )
+    return check(
+        "selected_action_validation_passes_current_artifacts",
+        not failures,
+        failures,
+        {"path": str(paths["selected_action_validation"])},
     )
 
 

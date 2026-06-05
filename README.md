@@ -116,9 +116,14 @@ The normal layer order is:
 3. Build extraction and chunk artifacts.
 4. Build retrieval and evidence-graph layers.
 5. Build claim and rule-binding layers.
-6. Build the review-scoped NEPA applicability Gate Graph when applicability
+6. Build review-scoped applicability artifacts. `applicability-context-build`
+   writes `selected_action/selected_action.json` as the package-action boundary
+   so trigger matching, retrieval, graph expansion, decisions, validation, and
+   generated rule packs use selected/proposed action evidence instead of broad
+   package background.
+7. Build the review-scoped NEPA applicability Gate Graph when applicability
    hierarchy or Forest Plan subgate visibility is needed.
-7. Run review, compliance, and evaluation commands against catalog-backed
+8. Run review, compliance, and evaluation commands against catalog-backed
    surfaces.
 
 For document-generation work, use `document-plan` first and route through

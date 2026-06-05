@@ -36,6 +36,12 @@ def build_validation_artifact_paths(
         "authority_universe": Path(authority_universe_path)
         if authority_universe_path
         else applicability_dir / "authority_universe_snapshot.json",
+        "selected_action": applicability_dir.parent
+        / "selected_action"
+        / "selected_action.json",
+        "selected_action_validation": applicability_dir.parent
+        / "selected_action"
+        / "selected_action_validation.json",
         "package_fact_graph": Path(package_fact_graph_path)
         if package_fact_graph_path
         else applicability_dir / "package_fact_graph.json",
@@ -76,6 +82,10 @@ def load_validation_artifacts(paths: dict[str, Path]) -> dict[str, Any]:
         "package_applicability_context": read_json_if_exists(
             paths["package_applicability_context"]
         ),
+        "selected_action": read_json_if_exists(paths["selected_action"]),
+        "selected_action_validation": read_json_if_exists(
+            paths["selected_action_validation"]
+        ),
         "package_fact_graph_validation": read_json_if_exists(
             paths["package_fact_graph_validation"]
         ),
@@ -106,6 +116,11 @@ def artifact_hashes(paths: dict[str, Path], artifacts: dict[str, Any]) -> dict[s
         ),
         "package_fact_graph_sha256": artifacts["package_fact_graph"].get(
             "package_fact_graph_sha256"
+        ),
+        "selected_action_sha256": first_present(
+            artifacts["selected_action"].get("selected_action_sha256"),
+            artifacts["package_applicability_context"].get("selected_action_sha256"),
+            artifacts["package_fact_graph"].get("selected_action_sha256"),
         ),
         "package_context_sha256": artifacts["package_applicability_context"].get(
             "package_context_sha256"
@@ -143,6 +158,7 @@ def _source_set_from_decisions(decisions: list[dict[str, Any]]) -> str | None:
 def first_present_source_set_id(artifacts: dict[str, Any]) -> str | None:
     for key in (
         "authority_universe",
+        "selected_action",
         "package_fact_graph",
         "package_applicability_context",
         "applicable_authorities",

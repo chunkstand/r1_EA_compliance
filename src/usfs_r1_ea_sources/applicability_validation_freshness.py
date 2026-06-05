@@ -9,6 +9,7 @@ from .records import sha256_file
 
 REQUIRED_PROVENANCE_ENTITY_IDS = {
     "authority_universe",
+    "selected_action",
     "package_fact_graph",
     "package_applicability_context",
     "retrieval_trace",
@@ -66,6 +67,11 @@ def check_artifact_freshness(
         artifacts["package_applicability_context"].get("package_chunks_sha256"),
         artifacts["package_fact_graph"].get("package_chunks_sha256"),
     )
+    selected_action_hash = first_present(
+        artifacts["selected_action"].get("selected_action_sha256"),
+        artifacts["package_applicability_context"].get("selected_action_sha256"),
+        artifacts["package_fact_graph"].get("selected_action_sha256"),
+    )
     retrieval_hash = optional_file_sha256(paths["retrieval_trace"])
     graph_hash = optional_file_sha256(paths["graph_trace"])
     coverage_hash = artifacts["search_coverage_certificates"].get(
@@ -106,6 +112,7 @@ def check_artifact_freshness(
         "authority_universe_sha256": (universe_hash, "source_set_stale"),
         "package_manifest_sha256": (package_manifest_hash, "package_cache_stale"),
         "package_chunks_sha256": (package_chunks_hash, "package_cache_stale"),
+        "selected_action_sha256": (selected_action_hash, "package_cache_stale"),
         "package_fact_graph_sha256": (package_fact_graph_hash, "package_cache_stale"),
         "retrieval_trace_sha256": (retrieval_hash, "retrieval_trace_stale"),
         "graph_trace_sha256": (graph_hash, "graph_trace_stale"),
@@ -154,6 +161,7 @@ def check_artifact_freshness(
             "authority_universe_sha256": (universe_hash, "source_set_stale"),
             "package_manifest_sha256": (package_manifest_hash, "package_cache_stale"),
             "package_chunks_sha256": (package_chunks_hash, "package_cache_stale"),
+            "selected_action_sha256": (selected_action_hash, "package_cache_stale"),
             "package_fact_graph_sha256": (package_fact_graph_hash, "package_cache_stale"),
             "retrieval_trace_sha256": (retrieval_hash, "retrieval_trace_stale"),
             "graph_trace_sha256": (graph_hash, "graph_trace_stale"),
@@ -300,5 +308,10 @@ def _expected_provenance_hashes(
         "package_chunks": first_present(
             artifacts["package_applicability_context"].get("package_chunks_sha256"),
             artifacts["package_fact_graph"].get("package_chunks_sha256"),
+        ),
+        "selected_action": first_present(
+            artifacts["selected_action"].get("selected_action_sha256"),
+            artifacts["package_applicability_context"].get("selected_action_sha256"),
+            artifacts["package_fact_graph"].get("selected_action_sha256"),
         ),
     }

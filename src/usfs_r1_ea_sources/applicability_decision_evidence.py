@@ -11,6 +11,7 @@ from .applicability_decision_arbitration import strong_evidence_count
 from .applicability_decision_arbitration import weak_evidence_count
 from .evidence_strength import classify_evidence_strength
 from .evidence_strength import evidence_strength_for_confidence
+from .selected_action import selected_action_chunk_ids
 
 
 def trigger_match(
@@ -193,14 +194,23 @@ def declared_source_library_evidence(
     return evidence
 
 
-def selected_package_results(retrieval_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    return [
-        result
-        for row in retrieval_rows
-        for result in row.get("ranked_results") or []
-        if result.get("selected_status") == "selected"
-        and result.get("result_kind") in {"package_fact", "package_section"}
-    ]
+def selected_package_results(
+    retrieval_rows: list[dict[str, Any]],
+    *,
+    selected_action: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
+    action_chunk_ids = selected_action_chunk_ids(selected_action)
+    results = []
+    for row in retrieval_rows:
+        for result in row.get("ranked_results") or []:
+            if result.get("selected_status") != "selected":
+                continue
+            if result.get("result_kind") not in {"package_fact", "package_section"}:
+                continue
+            if action_chunk_ids is not None and result.get("package_chunk_id") not in action_chunk_ids:
+                continue
+            results.append(result)
+    return results
 
 
 def retrieval_lineage(
@@ -245,15 +255,25 @@ def build_trigger_search_index(
     *,
     package_nodes: list[dict[str, Any]],
     package_chunks: list[dict[str, Any]],
+    selected_action: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    action_chunk_ids = selected_action_chunk_ids(selected_action)
+    scoped_nodes = _selected_action_scoped_nodes(
+        package_nodes=package_nodes,
+        action_chunk_ids=action_chunk_ids,
+    )
+    scoped_chunks = _selected_action_scoped_chunks(
+        package_chunks=package_chunks,
+        action_chunk_ids=action_chunk_ids,
+    )
     node_records = [
         _search_record(node, _package_node_text(node))
-        for node in package_nodes
+        for node in scoped_nodes
         if isinstance(node, dict)
     ]
     chunk_records = [
         _search_record(chunk, str(chunk.get("text") or ""))
-        for chunk in package_chunks
+        for chunk in scoped_chunks
         if isinstance(chunk, dict)
     ]
     return {
@@ -261,6 +281,10 @@ def build_trigger_search_index(
         "chunk_records": chunk_records,
         "node_token_index": _token_index(node_records),
         "chunk_token_index": _token_index(chunk_records),
+        "selected_action_scope_applied": action_chunk_ids is not None,
+        "selected_action_package_chunk_ids": sorted(action_chunk_ids)
+        if action_chunk_ids is not None
+        else None,
         "match_cache": {},
     }
 
@@ -291,16 +315,7 @@ def term_in_text(term: str, text: str) -> bool:
     raw_term = str(term or "").strip()
     if not raw_term:
         return False
-    if len(raw_term) <= 3 and raw_term.replace(".", "").isalnum():
-        return bool(
-            re.search(
-                rf"(?<![A-Za-z0-9]){re.escape(raw_term)}(?![A-Za-z0-9])",
-                text,
-                flags=re.IGNORECASE,
-            )
-        )
-    normalized_term = raw_term.lower()
-    return normalized_term in text.lower()
+    return bool(_term_match(raw_term, text))
 
 
 def _matching_package_nodes_for_group(
@@ -435,14 +450,8 @@ def _term_in_prepared_text(term: str, text: str, lower_text: str) -> bool:
     raw_term = str(term or "").strip()
     if not raw_term:
         return False
-    if len(raw_term) <= 3 and raw_term.replace(".", "").isalnum():
-        return bool(
-            re.search(
-                rf"(?<![A-Za-z0-9]){re.escape(raw_term)}(?![A-Za-z0-9])",
-                text,
-                flags=re.IGNORECASE,
-            )
-        )
+    if _term_should_use_boundary(raw_term):
+        return bool(_term_match(raw_term, text))
     return raw_term.lower() in lower_text
 
 
@@ -459,6 +468,38 @@ def _search_record(item: dict[str, Any], text: str) -> dict[str, Any]:
         "confidence_class": item.get("confidence_class"),
         "tokens": set(_tokens(lower_text)),
     }
+
+
+def _selected_action_scoped_nodes(
+    *,
+    package_nodes: list[dict[str, Any]],
+    action_chunk_ids: set[str] | None,
+) -> list[dict[str, Any]]:
+    if action_chunk_ids is None:
+        return package_nodes
+    if not action_chunk_ids:
+        return []
+    return [
+        node
+        for node in package_nodes
+        if set(strings(node.get("package_chunk_ids"))) & action_chunk_ids
+    ]
+
+
+def _selected_action_scoped_chunks(
+    *,
+    package_chunks: list[dict[str, Any]],
+    action_chunk_ids: set[str] | None,
+) -> list[dict[str, Any]]:
+    if action_chunk_ids is None:
+        return package_chunks
+    if not action_chunk_ids:
+        return []
+    return [
+        chunk
+        for chunk in package_chunks
+        if str(chunk.get("chunk_id") or "") in action_chunk_ids
+    ]
 
 
 def _token_index(records: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
@@ -697,16 +738,32 @@ def _package_chunk_evidence_span(chunk: dict[str, Any], group: list[str]) -> dic
 
 
 def _first_trigger_match(text: str, group: list[str]) -> tuple[str, int, int] | None:
-    lower_text = text.lower()
     matches = []
     for term in group:
-        normalized = term.lower()
-        index = lower_text.find(normalized)
-        if index >= 0:
-            matches.append((term, index, index + len(term)))
+        match = _term_match(str(term or ""), text)
+        if match:
+            matches.append((term, match.start(), match.end()))
     if not matches:
         return None
     return sorted(matches, key=lambda item: item[1])[0]
+
+
+def _term_match(term: str, text: str) -> re.Match[str] | None:
+    raw_term = str(term or "").strip()
+    if not raw_term:
+        return None
+    return re.search(_term_pattern(raw_term), text, flags=re.IGNORECASE)
+
+
+def _term_pattern(term: str) -> str:
+    escaped = re.escape(term).replace(r"\ ", r"\s+")
+    prefix = r"(?<![A-Za-z0-9])" if term[0].isalnum() else ""
+    suffix = r"(?![A-Za-z0-9])" if term[-1].isalnum() else ""
+    return f"{prefix}{escaped}{suffix}"
+
+
+def _term_should_use_boundary(term: str) -> bool:
+    return bool(term and (term[0].isalnum() or term[-1].isalnum()))
 
 
 def _package_node_text(node: dict[str, Any]) -> str:

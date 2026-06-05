@@ -65,20 +65,32 @@ Latest probe update on 2026-06-05:
   management areas but is not reviewer-ready because `880` Bitterroot Forest
   Plan component findings need reviewer resolution.
 - graph-gate result:
-  the applicability universe has `946` candidates: `47` base rules, `19`
-  authority-family templates, and `880` Forest Plan component candidates.
-  Applicability determination yields `59` applicable, `886` not applicable, and
-  `1` needs-adjudication authority:
-  `minerals_energy_authorities_authority_template`. Applicability validation
-  fails closed, generated-rule-pack creation refuses to run, and phase-eval
-  fails `27/30` with blockers in `applicability_validation`,
-  `generated_rule_pack`, and `compliance_review`.
+  the initial applicability run correctly failed closed on one
+  needs-adjudication authority:
+  `minerals_energy_authorities_authority_template`. The follow-up
+  selected-action implementation now writes
+  `source_library/reviews/<review_id>/selected_action/selected_action.json`
+  and `selected_action_validation.json`, threads `selected_action_sha256`
+  through package graph/context, retrieval, decisions, provenance, validation,
+  and generated rule packs, and scopes package trigger evidence to selected
+  action chunk IDs. Replayed Mud Creek applicability uses the same `946`
+  candidates (`47` base rules, `19` authority-family templates, and `880`
+  Forest Plan component candidates), with selected-action scope found over
+  `116` package chunks. Applicability determination now yields `38`
+  applicable, `908` not applicable, `0` unresolved, and `0`
+  needs-adjudication authorities. Applicability validation passes with
+  `reviewer_ready=true`; generated-rule-pack validation passes with `38`
+  generated rules.
 - lesson:
-  this is not a fourth completed full-review quality case. It is a stronger
-  fresh-EA stop-condition result: `applicability-gate-graph` validates
-  structurally with `998` nodes, `997` edges, `0` failed graph checks, `2`
-  blocked gates, and `1` pending gate, preserving the unresolved state instead
-  of producing a false green. Metrics are recorded in
+  this is still not a fourth completed full-review quality case. It first
+  showed the graph gate preserving an unresolved applicability state, then
+  showed the selected-action artifact removing a false minerals/energy
+  applicability trigger caused by broad package context and mineral-soil
+  restoration language. The refreshed `applicability-gate-graph` validates
+  structurally with `998` nodes, `997` edges, `0` failed graph checks, and no
+  blocked gates. `phase-eval` now passes `29/30`; the only blocker is
+  `compliance_review` because no compliance review/matrix has been generated
+  for this ad hoc Mud Creek packet. Metrics are recorded in
   `docs/MUD_CREEK_GRAPH_GATE_FRESH_EA_PROBE_RESULTS.md`.
 
 ## System Evaluation Trace-To-Case Promotion Gate

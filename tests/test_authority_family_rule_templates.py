@@ -161,6 +161,36 @@ def test_package_fact_cues_map_to_active_authority_family_templates() -> None:
     ) in package_fact_values
 
 
+def test_minerals_energy_template_uses_action_specific_triggers() -> None:
+    templates = _load_json(TEMPLATES_PATH)
+    template = next(
+        row
+        for row in templates["templates"]
+        if row["authority_family_id"] == "minerals_energy_authorities"
+    )
+
+    positive_terms = {
+        term.lower()
+        for group in template["applies_if_package_term_groups"]
+        for term in group
+    }
+    positive_terms.update(term.lower() for term in template["applies_if_package_terms"])
+
+    assert "mineral" not in positive_terms
+    assert "minerals" not in positive_terms
+    assert "surface use" not in positive_terms
+    assert "reclamation" not in positive_terms
+    assert {
+        "mining",
+        "mineral exploration",
+        "mineral development",
+        "mineral materials",
+        "energy development",
+        "surface use plan",
+        "oil and gas",
+    }.issubset(positive_terms)
+
+
 def _load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 

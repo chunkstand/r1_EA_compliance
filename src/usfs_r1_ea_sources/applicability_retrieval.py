@@ -20,6 +20,8 @@ from .applicability_retrieval_runtime import _query_specs_for_candidate
 from .applicability_retrieval_runtime import _strings
 from .records import sha256_file
 from .retrieval import default_index_path
+from .selected_action import load_selected_action_from_artifact_path
+from .selected_action import selected_action_path_from_artifact
 
 
 APPLICABILITY_GRAPH_TRACE_SCHEMA_VERSION = "applicability-graph-trace-v0"
@@ -73,6 +75,8 @@ def build_applicability_retrieval_traces(
     authority_universe = _read_required_json(authority_universe_path, "authority universe")
     package_fact_graph = _read_required_json(package_fact_graph_path, "package fact graph")
     _prepare_package_fact_graph_search(package_fact_graph)
+    selected_action_path = selected_action_path_from_artifact(package_fact_graph)
+    selected_action = load_selected_action_from_artifact_path(selected_action_path)
 
     if source_set_id is None:
         source_set_id = str(authority_universe.get("source_set_id") or "").strip()
@@ -151,6 +155,7 @@ def build_applicability_retrieval_traces(
                 searched_index_identity=searched_index_identity,
                 source_results_cache=source_results_cache,
                 package_fact_graph=package_fact_graph,
+                selected_action=selected_action,
                 package_graph_identity=package_graph_identity,
                 package_results_cache=package_results_cache,
                 top_k=top_k,
@@ -182,6 +187,7 @@ def build_applicability_retrieval_traces(
             candidate=candidate,
             retrieval_trace_rows=candidate_trace_rows,
             package_fact_graph=package_fact_graph,
+            selected_action=selected_action,
             package_graph_identity=package_graph_identity,
             evidence_graph_identity=evidence_graph_identity,
             graph_nodes=graph_nodes,

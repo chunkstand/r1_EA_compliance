@@ -5,6 +5,7 @@ import hashlib
 import re
 
 from .retrieval import query_retrieval_index
+from .selected_action import selected_action_chunk_ids
 
 
 APPLICABILITY_RETRIEVAL_TRACE_SCHEMA_VERSION = "applicability-retrieval-trace-v0"
@@ -113,6 +114,7 @@ def _execute_query_spec(
     searched_index_identity: dict[str, Any],
     source_results_cache: dict[tuple, list[dict[str, Any]]],
     package_fact_graph: dict[str, Any],
+    selected_action: dict[str, Any] | None,
     package_graph_identity: dict[str, Any],
     package_results_cache: dict[tuple, list[tuple[float, dict[str, Any]]]],
     top_k: int,
@@ -141,6 +143,7 @@ def _execute_query_spec(
             query_type=query_type,
             candidate=candidate,
             package_fact_graph=package_fact_graph,
+            selected_action=selected_action,
             package_results_cache=package_results_cache,
             top_k=top_k,
         )
@@ -308,21 +311,32 @@ def _package_results(
     query_type: str,
     candidate: dict[str, Any],
     package_fact_graph: dict[str, Any],
+    selected_action: dict[str, Any] | None,
     package_results_cache: dict[tuple, list[tuple[float, dict[str, Any]]]],
     top_k: int,
 ) -> list[dict[str, Any]]:
-    score_context = _package_score_context(query_text=query_text, candidate=candidate)
+    score_context = _package_score_context(
+        query_text=query_text,
+        candidate=candidate,
+        selected_action=selected_action,
+    )
     query_terms = list(score_context["query_terms"])
     cache_key = _package_results_cache_key(score_context)
     result_window = max(top_k * 2, top_k)
     scored = package_results_cache.get(cache_key)
     if scored is None:
         scored = []
+        action_chunk_ids = selected_action_chunk_ids(selected_action)
         for node in package_fact_graph.get("nodes") or []:
             if not isinstance(node, dict):
                 continue
             node_type = str(node.get("node_type") or "")
             if node_type == "evidence_span":
+                continue
+            if action_chunk_ids is not None and not _node_in_selected_action_scope(
+                node=node,
+                action_chunk_ids=action_chunk_ids,
+            ):
                 continue
             score = _score_package_node(node=node, score_context=score_context)
             if score <= 0:
@@ -543,8 +557,14 @@ def _prepare_package_fact_graph_search(package_fact_graph: dict[str, Any]) -> No
             node["_applicability_search_text"] = _package_node_text(node).casefold()
 
 
-def _package_score_context(*, query_text: str, candidate: dict[str, Any]) -> dict[str, Any]:
+def _package_score_context(
+    *,
+    query_text: str,
+    candidate: dict[str, Any],
+    selected_action: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     package_filters = _package_filters(candidate)
+    action_chunk_ids = selected_action_chunk_ids(selected_action)
     return {
         "query_terms": tuple(term.casefold() for term in _tokenize(query_text)),
         "required_types": frozenset(_strings(candidate.get("required_package_fact_types"))),
@@ -564,6 +584,9 @@ def _package_score_context(*, query_text: str, candidate: dict[str, Any]) -> dic
                 + _strings(package_filters.get("overlay_ids"))
             )
         ),
+        "selected_action_package_chunk_ids": tuple(sorted(action_chunk_ids))
+        if action_chunk_ids is not None
+        else None,
     }
 
 
@@ -573,6 +596,7 @@ def _package_results_cache_key(score_context: dict[str, Any]) -> tuple:
         tuple(sorted(score_context["required_types"])),
         tuple(sorted(score_context["section_families"])),
         tuple(score_context["filter_terms"]),
+        score_context["selected_action_package_chunk_ids"],
     )
 
 
@@ -588,6 +612,16 @@ def _package_node_matches_candidate(node: dict[str, Any], candidate: dict[str, A
         + _flatten_groups(candidate.get("negative_trigger_groups"))
     )
     return any(term.casefold() in text for term in terms)
+
+
+def _node_in_selected_action_scope(
+    *,
+    node: dict[str, Any],
+    action_chunk_ids: set[str],
+) -> bool:
+    if not action_chunk_ids:
+        return False
+    return bool(set(_strings(node.get("package_chunk_ids"))) & action_chunk_ids)
 
 
 def _package_node_text(node: dict[str, Any]) -> str:
@@ -714,8 +748,17 @@ def _page_label(value: object) -> str | None:
 
 
 def _matched_terms(terms: list[str], text: str) -> list[str]:
-    lower = str(text or "").lower()
-    return sorted({term for term in terms if term.lower() in lower})
+    return sorted({term for term in terms if _term_matches(term, str(text or ""))})
+
+
+def _term_matches(term: str, text: str) -> bool:
+    raw_term = str(term or "").strip()
+    if not raw_term:
+        return False
+    escaped = re.escape(raw_term).replace(r"\ ", r"\s+")
+    prefix = r"(?<![A-Za-z0-9])" if raw_term[0].isalnum() else ""
+    suffix = r"(?![A-Za-z0-9])" if raw_term[-1].isalnum() else ""
+    return bool(re.search(f"{prefix}{escaped}{suffix}", text, flags=re.IGNORECASE))
 
 
 def _tokenize(text: str) -> list[str]:

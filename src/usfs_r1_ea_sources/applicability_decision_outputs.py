@@ -63,6 +63,7 @@ def decision_provenance(
     search_coverage_certificates_path: Path,
     package_manifest_path: Path | None,
     package_chunks_path: Path | None,
+    selected_action_path: Path | None,
     source_set_manifest_path: Path | None,
     source_catalog_path: Path | None,
     authority_universe_sha256: str,
@@ -70,6 +71,7 @@ def decision_provenance(
     package_manifest_sha256: str,
     package_chunks_sha256: str,
     package_fact_graph_sha256: str,
+    selected_action_sha256: str,
     retrieval_trace_sha256: str,
     graph_trace_sha256: str,
     search_coverage_certificates_sha256: str,
@@ -84,6 +86,7 @@ def decision_provenance(
             package_manifest_sha256,
         ),
         _prov_optional_entity("package_chunks", package_chunks_path, package_chunks_sha256),
+        _prov_optional_entity("selected_action", selected_action_path, selected_action_sha256),
         _prov_optional_entity(
             "source_set_manifest",
             source_set_manifest_path,
@@ -133,6 +136,7 @@ def decision_provenance(
                 "used_entity_ids": [
                     "package_manifest",
                     "package_chunks",
+                    "selected_action",
                     "source_set_manifest",
                     "catalog",
                     "authority_universe",
@@ -171,6 +175,7 @@ def decision_provenance(
             for used in (
                 "package_manifest",
                 "package_chunks",
+                "selected_action",
                 "source_set_manifest",
                 "catalog",
                 "authority_universe",
@@ -183,6 +188,7 @@ def decision_provenance(
         "freshness": {
             "package_manifest_sha256": package_manifest_sha256,
             "package_chunks_sha256": package_chunks_sha256,
+            "selected_action_sha256": selected_action_sha256,
         },
         "replay_notes": (
             "Run applicability-authority-universe, applicability-context-build, "

@@ -188,6 +188,10 @@ def _check_applicability_validation_matches_current_artifacts(
             _validation_artifact_path(validation_paths, "package_fact_graph"),
             "package_fact_graph_sha256",
         ),
+        "selected_action_sha256": _json_field_from_path(
+            _validation_artifact_path(validation_paths, "selected_action"),
+            "selected_action_sha256",
+        ),
         "search_coverage_certificates_sha256": _optional_file_sha256(
             _validation_artifact_path(validation_paths, "search_coverage_certificates")
         ),
@@ -403,6 +407,7 @@ def _check_generated_rules_carry_required_metadata(
         "applicable_authorities_sha256",
         "non_applicable_authorities_sha256",
         "package_fact_graph_sha256",
+        "selected_action_sha256",
         "retrieval_trace_sha256",
         "graph_trace_sha256",
         "search_coverage_certificates_sha256",
@@ -551,6 +556,7 @@ def _check_hashes_match_current_artifacts(
         ),
         "base_rule_pack_sha256": _optional_file_sha256(base_rule_pack_path),
         "package_fact_graph_sha256": validation_hashes.get("package_fact_graph_sha256"),
+        "selected_action_sha256": validation_hashes.get("selected_action_sha256"),
         "retrieval_trace_sha256": validation_hashes.get("retrieval_trace_sha256"),
         "graph_trace_sha256": validation_hashes.get("graph_trace_sha256"),
         "search_coverage_certificates_sha256": validation_hashes.get(
