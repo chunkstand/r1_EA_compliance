@@ -15,6 +15,18 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Pre-Push Closeout Evidence
+
+Latest local implementation stack before GitHub push:
+
+- checkpoint:
+  the graph-gate review-quality experiment, selected-action applicability
+  scope, scientific-method run protocol, and no-EA-specific-runtime-hardcoding
+  guard are committed locally through `5fdec84` (`Guard against EA-specific
+  runtime hardcoding`). This note only records closeout parity for push; it does
+  not change the runtime route, generated-artifact claims, or the open status
+  of future runtime graph-gate consumption.
+
 ## Graph-Gate Review-Quality Three-Review Hypothesis Test
 
 Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:

@@ -12,6 +12,13 @@ For a short current route before this append-only log, start with `docs/CURRENT_
 Use this section to begin a new thread without rereading the older append-only
 history below.
 
+- pre-push closeout evidence:
+  the verified local stack for the graph-gate review-quality experiment,
+  selected-action applicability scope, scientific-method run protocol, and
+  no-EA-specific-runtime-hardcoding guard is committed through `5fdec84`
+  (`Guard against EA-specific runtime hardcoding`). This is a docs parity note
+  for GitHub push closeout only; runtime graph-gate consumption remains a
+  future scoped packet.
 - latest local NEPA Gate Graph slice:
   `config/applicability_gate_graph_nepa_ea_v1.json` and
   `applicability-gate-graph` now provide the initial NEPA EA Graph of Gates.

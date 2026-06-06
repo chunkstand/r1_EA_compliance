@@ -5,6 +5,12 @@ Use this short route before opening append-only docs.
 
 ## New Session Start
 - Read this file first, then `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
+- Pre-push closeout evidence: the verified graph-gate experiment,
+  selected-action applicability scope, scientific-method protocol, and
+  no-EA-specific-runtime-hardcoding guard are committed locally through
+  `5fdec84` (`Guard against EA-specific runtime hardcoding`). The worktree was
+  clean before this docs parity note; push closeout must prove remote parity
+  after the final docs alignment commit lands.
 - Latest resolved source-set graph-KB slice: phase-gated operational graph query surface after f70 canonical semantic graph direct-eval strengthening; exact counts live in `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved extraction/chunking/retrieval accuracy slice: sidecar reviewer package adoption after sidecar phase-eval adoption; exact paths, smoke counts, and sidecar promotion boundaries live in `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved architecture slice: eval trace inventory model split after the applicability fact-type support split; zero files are now above the `800`-line architecture cap.
