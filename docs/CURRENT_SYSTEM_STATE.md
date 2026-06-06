@@ -27,6 +27,39 @@ Latest local implementation stack before GitHub push:
   not change the runtime route, generated-artifact claims, or the open status
   of future runtime graph-gate consumption.
 
+## Deemer-Henry Fresh EA Review
+
+Latest ad hoc review update on 2026-06-05 local / 2026-06-06 UTC:
+
+- update:
+  the user-supplied Pinyon/Box folder
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158228778486`
+  resolves to `Deemer-Henry (59556)`, a Lolo National Forest EA on the
+  Plains/Thompson Falls Ranger District in Sanders County, Montana. The review
+  ID is `region1-example-lolo-deemer-henry-59556`; metrics and commands are
+  recorded in `docs/DEEMER_HENRY_FRESH_EA_REVIEW_RESULTS.md`.
+- live generated-artifact state:
+  ignored local intake under
+  `source_library/reviews/_intake/region1-example-lolo-deemer-henry-59556/`
+  downloaded `5/5` PDFs with `0` failures and `6,633,421` bytes. Base
+  `ea-review` extracted `5/5` files into `267` package chunks and was
+  reviewer-ready. Forest Plan context resolves to `lolo_nf`, with Lolo title
+  evidence and `5` management areas. Applicability validation passes with `36`
+  applicable authorities, `941` not applicable authorities, `0` unresolved,
+  and `0` needs-adjudication authorities. The generated rule pack validates
+  with `36` rules; the gate graph validates with `1,029` nodes, `1,028` edges,
+  and `0` failed checks. `compliance-review` is reviewer-ready with `36`
+  findings (`25` pass, `10` uncertain, `1` gap), valid JSON/Markdown/PDF
+  matrix outputs, `168` rule-claim links, and `1` rule-claim gap on
+  `forest_service_planning_handbook_amendments_authority_template`.
+- phase-eval state:
+  `phase-eval --review-id region1-example-lolo-deemer-henry-59556` passes
+  `30/30` phases with `reviewer_ready=true` and `blockers=[]`. This remains an
+  ad hoc review, not a governed forest-specific example promotion:
+  `declared_review_contract=false`,
+  `contract_backed_promotion_ready=false`, and
+  `review_direct_eval_status=not_required_for_ad_hoc_review`.
+
 ## Graph-Gate Review-Quality Three-Review Hypothesis Test
 
 Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:

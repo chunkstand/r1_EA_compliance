@@ -79,6 +79,18 @@ Use this short route before opening append-only docs.
   `docs/GRAPH_GATE_REVIEW_QUALITY_THREE_REVIEW_RESULTS.md`. The next packet may
   consider scoped runtime compliance/phase-eval graph-gate consumption; do not
   treat that runtime adoption as already implemented.
+- Latest ad hoc fresh-EA review:
+  Deemer-Henry `59556` is recorded in
+  `docs/DEEMER_HENRY_FRESH_EA_REVIEW_RESULTS.md`. The user-supplied Box folder
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158228778486`
+  resolved to a complete five-PDF Lolo National Forest package. Local generated
+  artifacts are reviewer-ready through intake, base `ea-review`, Forest Plan
+  context, applicability, generated rule-pack validation, gate graph,
+  compliance review/matrix, and phase-eval. `phase-eval` passes `30/30` with
+  `blockers=[]`, but this is still an ad hoc review:
+  `declared_review_contract=false`,
+  `contract_backed_promotion_ready=false`, and
+  `review_direct_eval_status=not_required_for_ad_hoc_review`.
 - Scientific-method run protocol:
   `docs/EA_REVIEW_SCIENTIFIC_METHOD_RUN_PROTOCOL.md` now governs new EA review
   improvement/regression claims. One measured run may change only one

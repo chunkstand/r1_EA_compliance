@@ -41,6 +41,27 @@ history below.
   `threshold_failures=[]`. The result supports artifact-derived review-quality
   improvement from graph-gate evidence and traceability only; runtime
   compliance/phase-eval graph-gate consumption remains a later packet.
+- Deemer-Henry ad hoc fresh-EA review:
+  the user-supplied Box root
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158228778486`
+  resolves to `Deemer-Henry (59556)`, Lolo National Forest, Plains/Thompson
+  Falls Ranger District, Sanders County, Montana. The review ID is
+  `region1-example-lolo-deemer-henry-59556`; full commands and metrics are in
+  `docs/DEEMER_HENRY_FRESH_EA_REVIEW_RESULTS.md`. The ignored local intake
+  downloaded `5/5` PDFs with `0` failures and `6,633,421` bytes. Base
+  `ea-review` is reviewer-ready with `5/5` files extracted, `267` package
+  chunks, and no unsupported findings. Forest Plan context resolves
+  `lolo_nf`; applicability validation passes with `36` applicable and `941`
+  not applicable authorities, `0` unresolved, and `0` needs-adjudication
+  authorities. The generated rule pack validates with `36` rules, the gate
+  graph validates with `1,029` nodes and `0` failed checks, compliance review
+  is reviewer-ready with `36` findings (`25` pass, `10` uncertain, `1` gap)
+  and valid matrix JSON/Markdown/PDF outputs, and `phase-eval` passes `30/30`
+  with `reviewer_ready=true` and `blockers=[]`. This remains an ad hoc review,
+  not a governed example promotion:
+  `declared_review_contract=false`,
+  `contract_backed_promotion_ready=false`, and
+  `review_direct_eval_status=not_required_for_ad_hoc_review`.
 - Mud Creek fresh-EA graph-gate probe:
   the user-supplied Box root
   `https://usfs-public.app.box.com/v/PinyonPublic/folder/158226071402`
